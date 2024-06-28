@@ -1,0 +1,94 @@
+---
+title: "Econometric_regression"
+author: "name"
+date: "2023-12-10"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Loading the data 
+```{r}
+library(readxl)
+df<- read_excel("2013lifeexpectancy.xls")
+View(df)
+```
+
+# Simple linear Model
+```{r}
+library(knitr)
+# Fit the simple linear regression model
+model_simple <- lm(Life_Expectancy ~ Alcohol, data = df)
+
+# Print the summary of the model
+summary(model_simple)
+
+```
+```{r}
+library(modelsummary)
+modelsummary(model_simple, output = "markdown")
+```
+
+# Multilinear regression model I
+```{r}
+# Fit the multiple linear regression model
+model_multiple <- lm(Life_Expectancy ~ Alcohol + Schooling + BMI, data = df)
+
+# Print the summary of the model
+summary(model_multiple)
+
+```
+```{r}
+modelsummary(model_multiple, output = "markdown")
+```
+
+# F-test
+```{r}
+# Fit the simple model without new variables
+model_simple <- lm(Life_Expectancy ~ Alcohol, data = df)
+
+# Perform ANOVA test to compare models
+anova_result <- anova(model_simple, model_multiple)
+print(anova_result)
+
+```
+```{r}
+# Print the ANOVA results using kable
+kable(anova_result, format = "markdown", caption = "ANOVA Test Results for Model Comparison")
+```
+
+# Multilinear regression model II
+
+```{r}
+# Fit the multiple linear regression model with a quadratic term for Schooling
+model_quadratic <- lm(Life_Expectancy ~ Alcohol + Schooling + I((Schooling)^2) + BMI, data = df)
+
+# Print the summary of the model
+summary(model_quadratic)
+
+```
+
+```{r}
+modelsummary(model_quadratic, output = "markdown")
+```
+
+
+
+# Logarithmic model
+
+```{r}
+# Fit the logarithmic model
+log_model <- lm(log(Life_Expectancy) ~ Alcohol + log(Schooling) + BMI, data = df)
+
+# Print the summary of the logarithmic model
+summary(log_model)
+
+```
+
+
+
+
